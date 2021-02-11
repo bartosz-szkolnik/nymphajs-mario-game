@@ -1,0 +1,16 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* background-color: #000; */
+  background-color: hsl(210, 58%, 25%);
+}
+
+#screen {
+  display: block;
+  image-rendering: pixelated;
+  /* height: 100vh; */
+  margin: 0 auto;
+}
