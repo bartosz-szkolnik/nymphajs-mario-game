@@ -3,6 +3,7 @@ import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
 import { PendulumMove, PENDULUM_MOVE_TRAIT } from '../traits/pendulum-move';
+import { PHYSICS_TRAIT, Physics } from '../traits/physics';
 import { SOLID_TRAIT, Solid } from '../traits/solid';
 import { STOMPER_TRAIT } from '../traits/stomper';
 import { BEHAVIOR_TRAIT } from './constants';
@@ -139,6 +140,7 @@ function createKoopaFactory(sprite: SpriteSheet) {
     koopa.size.set(16, 16);
     koopa.offset.set(0, 8);
 
+    koopa.addTrait(PHYSICS_TRAIT, new Physics());
     koopa.addTrait(SOLID_TRAIT, new Solid());
     koopa.addTrait(PENDULUM_MOVE_TRAIT, new PendulumMove());
     koopa.addTrait(BEHAVIOR_TRAIT, new Behavior());

@@ -3,6 +3,7 @@ import { loadSpriteSheet } from '../loaders';
 import { Go, GO_TRAIT } from '../traits/go';
 import { Jump, JUMP_TRAIT } from '../traits/jump';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
+import { Physics, PHYSICS_TRAIT } from '../traits/physics';
 import { Solid, SOLID_TRAIT } from '../traits/solid';
 import { Stomper, STOMPER_TRAIT } from '../traits/stomper';
 
@@ -51,6 +52,7 @@ function createMarioFactory(sprite: SpriteSheet) {
     const mario = new Renderable();
     mario.size.set(16, 16);
 
+    mario.addTrait(PHYSICS_TRAIT, new Physics());
     mario.addTrait(SOLID_TRAIT, new Solid());
     mario.addTrait(GO_TRAIT, new Go());
     mario.addTrait(JUMP_TRAIT, new Jump());
