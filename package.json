@@ -1,5 +1,5 @@
 {
-  "name": "mario-game",
+  "name": "nymphajs-mario-game",
   "version": "0.0.0",
   "main": "src/main.ts",
   "author": "Bartosz Szkolnik",
