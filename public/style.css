@@ -4,13 +4,13 @@
 }
 
 body {
-  /* background-color: #000; */
-  background-color: hsl(210, 58%, 25%);
+  background-color: #000;
+  /* background-color: hsl(210, 58%, 25%); */
 }
 
 #screen {
   display: block;
   image-rendering: pixelated;
-  /* height: 100vh; */
+  height: 100vh;
   margin: 0 auto;
 }
