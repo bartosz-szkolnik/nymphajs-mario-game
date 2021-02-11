@@ -3,6 +3,7 @@ import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
 import { PendulumMove, PENDULUM_MOVE_TRAIT } from '../traits/pendulum-move';
+import { SOLID_TRAIT, Solid } from '../traits/solid';
 import { STOMPER_TRAIT } from '../traits/stomper';
 import { BEHAVIOR_TRAIT } from './constants';
 
@@ -54,7 +55,7 @@ class Behavior extends Trait {
     } else if (this.state === 'hiding') {
       us.getTrait<Killable>(KILLABLE_TRAIT).kill();
       us.vel.set(100, -200);
-      us.canCollide = false;
+      us.getTrait<Solid>(SOLID_TRAIT).obstructs = false;
     } else if (this.state === 'panic') {
       this.hide(us);
     }
@@ -138,6 +139,7 @@ function createKoopaFactory(sprite: SpriteSheet) {
     koopa.size.set(16, 16);
     koopa.offset.set(0, 8);
 
+    koopa.addTrait(SOLID_TRAIT, new Solid());
     koopa.addTrait(PENDULUM_MOVE_TRAIT, new PendulumMove());
     koopa.addTrait(BEHAVIOR_TRAIT, new Behavior());
     koopa.addTrait(KILLABLE_TRAIT, new Killable());

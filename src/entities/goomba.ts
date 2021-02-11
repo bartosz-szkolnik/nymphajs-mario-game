@@ -3,6 +3,7 @@ import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
 import { PendulumMove, PENDULUM_MOVE_TRAIT } from '../traits/pendulum-move';
+import { SOLID_TRAIT, Solid } from '../traits/solid';
 import { STOMPER_TRAIT } from '../traits/stomper';
 import { BEHAVIOR_TRAIT } from './constants';
 
@@ -56,6 +57,7 @@ function createGoombaFactory(sprite: SpriteSheet) {
     const goomba = new Renderable();
     goomba.size.set(16, 16);
 
+    goomba.addTrait(SOLID_TRAIT, new Solid());
     goomba.addTrait(PENDULUM_MOVE_TRAIT, new PendulumMove());
     goomba.addTrait(BEHAVIOR_TRAIT, new Behavior());
     goomba.addTrait(KILLABLE_TRAIT, new Killable());
