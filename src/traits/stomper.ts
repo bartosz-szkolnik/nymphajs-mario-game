@@ -1,5 +1,5 @@
 import { Entity, Trait } from '@nymphajs/core';
-import { KILLABLE_TRAIT } from './killable';
+import { Killable, KILLABLE_TRAIT } from './killable';
 
 export const STOMPER_TRAIT = 'stomper';
 
@@ -16,7 +16,14 @@ export class Stomper extends Trait {
   }
 
   collides(us: Entity, them: Entity) {
-    if (them.hasTrait(KILLABLE_TRAIT) && us.vel.y > them.vel.y) {
+    if (
+      !them.hasTrait(KILLABLE_TRAIT) ||
+      them.getTrait<Killable>(KILLABLE_TRAIT).dead
+    ) {
+      return;
+    }
+
+    if (us.vel.y > them.vel.y) {
       this.bounce(us, them);
     }
   }
