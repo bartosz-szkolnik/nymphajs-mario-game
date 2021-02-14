@@ -2,7 +2,9 @@ import { Camera, Entity, Timer } from '@nymphajs/core';
 import { CanvasModule } from '@nymphajs/dom-api';
 import { loadEntities } from './entities';
 import { setupKeyboard } from './input';
-import { createCollisionLayer } from './layers';
+import { createCollisionLayer } from './layers/collision-layer';
+// import { createDashboardLayer } from './layers/dashboard-layer';
+// import { loadFont } from './loaders/font-loader';
 import { createLevelLoader } from './loaders/level-loader';
 import {
   PlayerController,
@@ -22,7 +24,10 @@ function createPlayerEnv(playerEntity: Entity) {
 async function main(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')!;
 
-  const entityFactory = await loadEntities();
+  const [entityFactory, font] = await Promise.all([
+    loadEntities(),
+    // loadFont()
+  ]);
   const loadLevel = createLevelLoader(entityFactory);
   const level = await loadLevel('1-1');
 
@@ -37,6 +42,7 @@ async function main(canvas: HTMLCanvasElement) {
   level.entities.add(playerEnv);
 
   level.compositor.addLayer(createCollisionLayer(level));
+  // level.compositor.addLayer(createDashboardLayer(font, playerEnv);
 
   function update(deltaTime: number) {
     level.update(deltaTime);
@@ -58,6 +64,6 @@ async function main(canvas: HTMLCanvasElement) {
 }
 
 const canvasModule = new CanvasModule();
-const { canvas } = canvasModule.init('canvas-container');
+const { canvas } = canvasModule.init('#canvas-container');
 
 main(canvas);

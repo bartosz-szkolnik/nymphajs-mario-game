@@ -1,7 +1,8 @@
 import { Matrix, CollisionTile, GameTile, Level } from '@nymphajs/core';
 import { loadJSON, SpriteSheet } from '@nymphajs/dom-api';
 import { Factory } from '../entities';
-import { createBackgroundLayer, createSpriteLayer } from '../layers';
+import { createBackgroundLayer } from '../layers/background-layer';
+import { createSpriteLayer } from '../layers/sprites-layer';
 import { loadSpriteSheet } from '../loaders';
 
 type ExpandedTile = {
