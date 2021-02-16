@@ -1,4 +1,4 @@
-import { Camera, Entity, Timer } from '@nymphajs/core';
+import { Camera, Entity, GameContext, Timer } from '@nymphajs/core';
 import { CanvasModule } from '@nymphajs/dom-api';
 import { loadEntities } from './entities';
 import { setupKeyboard } from './input';
@@ -23,8 +23,13 @@ function createPlayerEnv(playerEntity: Entity) {
 
 async function main(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')!;
+  const audioCtx = new AudioContext();
 
-  const [entityFactory, font] = await Promise.all([loadEntities(), loadFont()]);
+  const [entityFactory, font] = await Promise.all([
+    loadEntities(audioCtx),
+    loadFont(),
+  ]);
+
   const loadLevel = createLevelLoader(entityFactory);
   const level = await loadLevel('1-1');
 
@@ -41,8 +46,14 @@ async function main(canvas: HTMLCanvasElement) {
   level.compositor.addLayer(createCollisionLayer(level));
   level.compositor.addLayer(createDashboardLayer(font, playerEnv));
 
+  const gameContext: GameContext = {
+    deltaTime: 0,
+    audioContext: audioCtx,
+  };
+
   function update(deltaTime: number) {
-    level.update(deltaTime);
+    gameContext.deltaTime = deltaTime;
+    level.update(gameContext);
 
     camera.position.x = Math.max(0, mario.pos.x - 100);
     level.compositor.draw(ctx, camera);
@@ -63,4 +74,8 @@ async function main(canvas: HTMLCanvasElement) {
 const canvasModule = new CanvasModule();
 const { canvas } = canvasModule.init('#canvas-container');
 
-main(canvas);
+const start = () => {
+  window.removeEventListener('click', start);
+  main(canvas);
+};
+window.addEventListener('click', start);

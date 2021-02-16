@@ -1,4 +1,10 @@
-import { CollisionDirection, Entity, Trait, Level } from '@nymphajs/core';
+import {
+  CollisionDirection,
+  Entity,
+  Trait,
+  Level,
+  GameContext,
+} from '@nymphajs/core';
 
 export const KILLABLE_TRAIT = 'killable';
 
@@ -11,7 +17,7 @@ export class Killable extends Trait {
     super(KILLABLE_TRAIT);
   }
 
-  update(entity: Entity, deltaTime: number, level: Level) {
+  update(entity: Entity, { deltaTime }: GameContext, level: Level) {
     if (this.dead) {
       this.deadTime += deltaTime;
 

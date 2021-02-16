@@ -1,4 +1,4 @@
-import { CollisionDirection, Entity, Trait } from '@nymphajs/core';
+import { CollisionDirection, Entity, GameContext, Trait } from '@nymphajs/core';
 
 export const JUMP_TRAIT = 'jump';
 const SPEED_BOOST = 0.3;
@@ -28,9 +28,10 @@ export class Jump extends Trait {
     this.requestTime = 0;
   }
 
-  update(entity: Entity, deltaTime: number) {
+  update(entity: Entity, { deltaTime }: GameContext) {
     if (this.requestTime > 0) {
       if (this.ready > 0) {
+        this.sounds.add('jump');
         this.engageTime = this.duration;
         this.requestTime = 0;
       }

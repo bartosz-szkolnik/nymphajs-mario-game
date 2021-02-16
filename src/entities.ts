@@ -5,7 +5,7 @@ import { loadMario } from './entities/mario';
 
 export type Factory = () => Renderable;
 
-export async function loadEntities() {
+export async function loadEntities(audioContext: AudioContext) {
   const entityFactories: Record<string, Factory> = {};
 
   function addAs(name: string) {
@@ -13,7 +13,7 @@ export async function loadEntities() {
   }
 
   return Promise.all([
-    loadMario().then(addAs('mario')),
+    loadMario(audioContext).then(addAs('mario')),
     loadGoomba().then(addAs('goomba')),
     loadKoopa().then(addAs('koopa')),
   ]).then(() => entityFactories);

@@ -1,4 +1,4 @@
-import { Entity, Level, Trait, Vec2 } from '@nymphajs/core';
+import { Entity, GameContext, Level, Trait, Vec2 } from '@nymphajs/core';
 import { Killable, KILLABLE_TRAIT } from './killable';
 import { Stomper, STOMPER_TRAIT } from './stomper';
 
@@ -22,7 +22,7 @@ export class PlayerController extends Trait {
     };
   }
 
-  update(entity: Entity, deltaTime: number, level: Level) {
+  update(entity: Entity, { deltaTime }: GameContext, level: Level) {
     if (!this.player) {
       return;
     }

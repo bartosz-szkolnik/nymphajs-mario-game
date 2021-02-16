@@ -1,4 +1,4 @@
-import { Entity, Trait, Level } from '@nymphajs/core';
+import { Entity, Trait, Level, GameContext } from '@nymphajs/core';
 
 export const PHYSICS_TRAIT = 'physics';
 
@@ -7,7 +7,7 @@ export class Physics extends Trait {
     super(PHYSICS_TRAIT);
   }
 
-  update(entity: Entity, deltaTime: number, level: Level) {
+  update(entity: Entity, { deltaTime }: GameContext, level: Level) {
     entity.pos.x += entity.vel.x * deltaTime;
     level.tileCollider?.checkX(entity);
 

@@ -1,4 +1,4 @@
-import { Entity, Trait } from '@nymphajs/core';
+import { Entity, GameContext, Trait } from '@nymphajs/core';
 import { Jump, JUMP_TRAIT } from './jump';
 
 export const GO_TRAIT = 'go';
@@ -16,7 +16,7 @@ export class Go extends Trait {
     super(GO_TRAIT);
   }
 
-  update(entity: Entity, deltaTime: number) {
+  update(entity: Entity, { deltaTime }: GameContext) {
     const absX = Math.abs(entity.vel.x);
     if (this.direction !== 0) {
       entity.vel.x += this.acceleration * deltaTime * this.direction;

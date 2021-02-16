@@ -1,5 +1,7 @@
+import type { AudioBoard } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders';
+import { loadAudioBoard } from '../loaders/audio-loader';
 import { Go, GO_TRAIT } from '../traits/go';
 import { Jump, JUMP_TRAIT } from '../traits/jump';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
@@ -10,11 +12,16 @@ import { Stomper, STOMPER_TRAIT } from '../traits/stomper';
 const FAST_DRAG = 1 / 5000;
 const SLOW_DRAG = 1 / 1000;
 
-export async function loadMario() {
-  return loadSpriteSheet('mario').then(createMarioFactory);
+export async function loadMario(audioContext: AudioContext) {
+  return Promise.all([
+    loadSpriteSheet('mario'),
+    loadAudioBoard('mario', audioContext),
+  ]).then(([sprite, audio]) => {
+    return createMarioFactory(sprite, audio);
+  });
 }
 
-function createMarioFactory(sprite: SpriteSheet) {
+function createMarioFactory(sprite: SpriteSheet, audioBoard: AudioBoard) {
   const runAnim = sprite.animations.get('run');
   function routeFrame(mario: Renderable) {
     const { distance, direction } = mario.getTrait<Go>(GO_TRAIT);
@@ -50,6 +57,7 @@ function createMarioFactory(sprite: SpriteSheet) {
 
   return function createMario() {
     const mario = new Renderable();
+    mario.audio = audioBoard;
     mario.size.set(16, 16);
 
     mario.addTrait(PHYSICS_TRAIT, new Physics());

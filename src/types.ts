@@ -56,3 +56,7 @@ type SpriteSheetSpec = {
     }
   ];
 };
+
+type AudioSheetSpec = {
+  fx: Record<string, Record<'url', string>>;
+};

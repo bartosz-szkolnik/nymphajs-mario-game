@@ -1,4 +1,4 @@
-import { Entity, Trait } from '@nymphajs/core';
+import { Entity, GameContext, Trait } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
@@ -25,7 +25,7 @@ class Behavior extends Trait {
     super(BEHAVIOR_TRAIT);
   }
 
-  update(us: Entity, deltaTime: number) {
+  update(us: Entity, { deltaTime }: GameContext) {
     if (this.state === 'hiding') {
       this.hideTime += deltaTime;
 
