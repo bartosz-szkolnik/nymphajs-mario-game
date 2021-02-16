@@ -1,4 +1,5 @@
 import { Renderable } from '@nymphajs/dom-api';
+import { loadBullet } from './entities/bullet';
 import { loadGoomba } from './entities/goomba';
 import { loadKoopa } from './entities/koopa';
 import { loadMario } from './entities/mario';
@@ -16,5 +17,6 @@ export async function loadEntities(audioContext: AudioContext) {
     loadMario(audioContext).then(addAs('mario')),
     loadGoomba().then(addAs('goomba')),
     loadKoopa().then(addAs('koopa')),
+    loadBullet().then(addAs('bullet')),
   ]).then(() => entityFactories);
 }

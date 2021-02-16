@@ -292,6 +292,10 @@
     {
       "name": "goomba",
       "position": [220, 0]
+    },
+    {
+      "name": "bullet",
+      "position": [128, 32]
     }
   ]
 }
