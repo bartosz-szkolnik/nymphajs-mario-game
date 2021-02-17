@@ -58,7 +58,7 @@ function createMarioFactory(sprite: SpriteSheet, audioBoard: AudioBoard) {
   return function createMario() {
     const mario = new Renderable();
     mario.audio = audioBoard;
-    mario.size.set(16, 16);
+    mario.size.set(14, 16);
 
     mario.addTrait(PHYSICS_TRAIT, new Physics());
     mario.addTrait(SOLID_TRAIT, new Solid());

@@ -1,4 +1,4 @@
-import { Camera, Entity, GameContext, Timer } from '@nymphajs/core';
+import { Camera, GameContext, Timer } from '@nymphajs/core';
 import { CanvasModule } from '@nymphajs/dom-api';
 import { loadEntities } from './entities';
 import { setupKeyboard } from './input';
@@ -6,20 +6,7 @@ import { createCollisionLayer } from './layers/collision-layer';
 import { createDashboardLayer } from './layers/dashboard-layer';
 import { loadFont } from './loaders/font-loader';
 import { createLevelLoader } from './loaders/level-loader';
-import {
-  PlayerController,
-  PLAYER_CONTROLLER_TRAIT,
-} from './traits/player-controller';
-
-function createPlayerEnv(playerEntity: Entity) {
-  const playerEnv = new Entity();
-  const playerController = new PlayerController();
-  playerController.setPlayer(playerEntity);
-  playerController.checkpoint.set(64, 64);
-
-  playerEnv.addTrait(PLAYER_CONTROLLER_TRAIT, playerController);
-  return playerEnv;
-}
+import { createPlayer, createPlayerEnv } from './player';
 
 async function main(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')!;
@@ -35,7 +22,7 @@ async function main(canvas: HTMLCanvasElement) {
 
   const camera = new Camera();
 
-  const mario = entityFactory.mario();
+  const mario = createPlayer(entityFactory.mario());
 
   const input = setupKeyboard(mario);
   input.listenTo(window);

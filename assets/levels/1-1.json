@@ -158,7 +158,7 @@
         {
           "name": "cannon-2h",
           "pattern": true,
-          "ranges": [[6, 11]]
+          "ranges": [[6, 7]]
         }
       ]
     }
@@ -294,8 +294,8 @@
       "position": [220, 0]
     },
     {
-      "name": "bullet",
-      "position": [128, 32]
+      "name": "cannon",
+      "position": [96, 112]
     }
   ]
 }

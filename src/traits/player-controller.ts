@@ -19,7 +19,7 @@ export class PlayerController extends Trait {
 
     this.player.getTrait<Stomper>(STOMPER_TRAIT).events.listen('stomp', () => {
       this.score += 100;
-    };
+    });
   }
 
   update(entity: Entity, { deltaTime }: GameContext, level: Level) {

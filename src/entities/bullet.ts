@@ -43,7 +43,7 @@ class Behavior extends Trait {
 
 function createBulletFactory(sprite: SpriteSheet) {
   function drawBullet(bullet: Renderable, context: CanvasRenderingContext2D) {
-    sprite.draw('bullet', context, 0, 0);
+    sprite.draw('bullet', context, 0, 0, bullet.vel.x < 0);
   }
 
   return function createBullet() {
