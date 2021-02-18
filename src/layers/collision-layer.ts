@@ -1,22 +1,22 @@
-import { Level, Layer, Camera, Entity, TileCollider } from '@nymphajs/core';
+import { Level, Layer, Camera, Entity, TileResolver } from '@nymphajs/core';
 
 export function createCollisionLayer(level: Level): Layer {
-  const drawTileCandidates = createTileCandidateLayer(level.tileCollider!);
+  const drawTileCandidates = level.tileCollider.resolvers.map(
+    createTileCandidateLayer
+  );
   const drawBoundingBoxes = createEntityLayer(level.entities);
 
   return function drawCollision(
     context: CanvasRenderingContext2D,
     camera: Camera
   ) {
-    drawTileCandidates(context, camera);
+    drawTileCandidates.forEach((drawFn) => drawFn(context, camera));
     drawBoundingBoxes(context, camera);
   };
 }
 
-function createTileCandidateLayer(tileCollider: TileCollider) {
+function createTileCandidateLayer(tileResolver: TileResolver) {
   const resolvedTiles: Record<string, number>[] = [];
-
-  const tileResolver = tileCollider!.tiles;
   const tileSize = tileResolver.tileSize;
 
   const getByIndexOriginal = tileResolver.getByIndex;

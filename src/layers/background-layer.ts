@@ -1,7 +1,7 @@
 import {
   Level,
   Matrix,
-  GameTile,
+  Tile,
   Layer,
   TileResolver,
   Camera,
@@ -10,7 +10,7 @@ import { SpriteSheet } from '@nymphajs/dom-api';
 
 export function createBackgroundLayer(
   level: Level,
-  tiles: Matrix<GameTile>,
+  tiles: Matrix<Tile>,
   sprites: SpriteSheet
 ): Layer {
   const resolver = new TileResolver(tiles);

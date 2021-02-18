@@ -1,4 +1,4 @@
-import { Matrix, CollisionTile, GameTile, Level } from '@nymphajs/core';
+import { Matrix, Tile, Level } from '@nymphajs/core';
 import { loadJSON, SpriteSheet } from '@nymphajs/dom-api';
 import { Factory } from '../entities';
 import { createBackgroundLayer } from '../layers/background-layer';
@@ -6,7 +6,7 @@ import { createSpriteLayer } from '../layers/sprites-layer';
 import { loadSpriteSheet } from '../loaders';
 
 type ExpandedTile = {
-  tile: Tile;
+  tile: TileSpec;
   x: number;
   y: number;
 };
@@ -20,7 +20,6 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
       ]).then(([levelSpec, backgroundSprites]: [LevelSpec, SpriteSheet]) => {
         const level = new Level();
 
-        setupCollision(levelSpec, level);
         setupBackground(levelSpec, level, backgroundSprites);
         setupEntities(levelSpec, level, entityFactory);
 
@@ -30,29 +29,19 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
   };
 }
 
-function createCollisionGrid(tiles: Tile[], patterns?: Patterns) {
-  const grid = new Matrix<CollisionTile>();
+function createGrid(tiles: TileSpec[], patterns?: Patterns) {
+  const grid = new Matrix<Tile>();
 
   for (const { tile, x, y } of expandTiles(tiles, patterns)) {
-    grid.set(x, y, { type: tile.type });
+    grid.set(x, y, tile);
   }
 
   return grid;
 }
 
-function createBackgroundGrid(tiles: Tile[], patterns?: Patterns) {
-  const grid = new Matrix<GameTile>();
-
-  for (const { tile, x, y } of expandTiles(tiles, patterns)) {
-    grid.set(x, y, { name: tile.name });
-  }
-
-  return grid;
-}
-
-function* expandTiles(tiles: Tile[], patterns?: Patterns) {
+function* expandTiles(tiles: TileSpec[], patterns?: Patterns) {
   function* walkTiles(
-    tiles: Tile[],
+    tiles: TileSpec[],
     offsetX: number,
     offsetY: number
   ): Generator<ExpandedTile> {
@@ -97,7 +86,7 @@ function* expandSpan(
   }
 }
 
-function expandRange(range: Tile['ranges'][0]) {
+function expandRange(range: TileSpec['ranges'][0]) {
   if (range.length === 4) {
     const [xStart, xLen, yStart, yLen] = range;
     return expandSpan(xStart, xLen, yStart, yLen);
@@ -112,20 +101,10 @@ function expandRange(range: Tile['ranges'][0]) {
   return [];
 }
 
-function* expandRanges(ranges: Tile['ranges']) {
+function* expandRanges(ranges: TileSpec['ranges']) {
   for (const range of ranges) {
     yield* expandRange(range);
   }
-}
-
-function setupCollision(levelSpec: LevelSpec, level: Level) {
-  const { layers, patterns } = levelSpec;
-  const mergedTiles = layers.reduce((mergedTiles, layerSpec) => {
-    return mergedTiles.concat(layerSpec.tiles);
-  }, [] as Tile[]);
-
-  const collisionGrid = createCollisionGrid(mergedTiles, patterns);
-  level.setCollisionGrid(collisionGrid);
 }
 
 function setupBackground(
@@ -135,11 +114,13 @@ function setupBackground(
 ) {
   const { layers, patterns } = levelSpec;
   layers.forEach((layer) => {
-    const backgroundGrid = createBackgroundGrid(layer.tiles, patterns);
+    const grid = createGrid(layer.tiles, patterns);
 
-    const args = [level, backgroundGrid, backgroundSprites] as const;
+    const args = [level, grid, backgroundSprites] as const;
     const backgroundLayer = createBackgroundLayer(...args);
+
     level.compositor.addLayer(backgroundLayer);
+    level.tileCollider.addGrid(grid);
   });
 }
 

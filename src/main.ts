@@ -7,6 +7,8 @@ import { createDashboardLayer } from './layers/dashboard-layer';
 import { loadFont } from './loaders/font-loader';
 import { createLevelLoader } from './loaders/level-loader';
 import { createPlayer, createPlayerEnv } from './player';
+import { BrickCollisionHandler } from './tiles/brick';
+import { GroundCollisionHandler } from './tiles/ground';
 
 async function main(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')!;
@@ -19,6 +21,9 @@ async function main(canvas: HTMLCanvasElement) {
 
   const loadLevel = createLevelLoader(entityFactory);
   const level = await loadLevel('1-1');
+
+  level.tileCollider.addCollisionHandler(new GroundCollisionHandler());
+  level.tileCollider.addCollisionHandler(new BrickCollisionHandler());
 
   const camera = new Camera();
 
@@ -36,6 +41,7 @@ async function main(canvas: HTMLCanvasElement) {
   const gameContext: GameContext = {
     deltaTime: 0,
     audioContext: audioCtx,
+    entityFactory,
   };
 
   function update(deltaTime: number) {

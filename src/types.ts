@@ -1,4 +1,4 @@
-type Tile = {
+type TileSpec = {
   name: string;
   type?: 'ground';
   pattern?: boolean;
@@ -10,7 +10,7 @@ type Tile = {
 };
 
 type Pattern = {
-  tiles: Tile[];
+  tiles: TileSpec[];
 };
 
 type Patterns = Record<string, Pattern>;
@@ -23,7 +23,7 @@ type EntitySpec = {
 type LevelSpec = {
   spriteSheet: string;
   layers: {
-    tiles: Tile[];
+    tiles: TileSpec[];
   }[];
   patterns?: Patterns;
   entities: EntitySpec[];
