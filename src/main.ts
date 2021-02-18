@@ -56,10 +56,16 @@ async function main(canvas: HTMLCanvasElement) {
   timer.setUpdateFn(update);
   timer.start();
 
+  const player = level.musicController.player;
+  if (player) {
+    player.playTrack('main');
+  }
+
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Escape') {
       console.log('Animation stopped!');
       cancelAnimationFrame(timer.animationFrameId);
+      level.musicController.player?.stopTrack();
     }
   });
 }

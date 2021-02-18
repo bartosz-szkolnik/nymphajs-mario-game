@@ -22,6 +22,7 @@ type EntitySpec = {
 
 type LevelSpec = {
   spriteSheet: string;
+  musicSheet: string;
   layers: {
     tiles: TileSpec[];
   }[];
@@ -59,4 +60,8 @@ type SpriteSheetSpec = {
 
 type AudioSheetSpec = {
   fx: Record<string, Record<'url', string>>;
+};
+
+type MusicSheetSpec = {
+  main: Record<'url', string>;
 };

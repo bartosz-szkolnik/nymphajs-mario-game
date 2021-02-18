@@ -1,8 +1,9 @@
-import { Matrix, Tile, Level } from '@nymphajs/core';
+import { Matrix, Tile, Level, MusicPlayer } from '@nymphajs/core';
 import { loadJSON, SpriteSheet } from '@nymphajs/dom-api';
 import { Factory } from '../entities';
 import { createBackgroundLayer } from '../layers/background-layer';
 import { createSpriteLayer } from '../layers/sprites-layer';
+import { loadMusicSheet } from './music-loader';
 import { loadSpriteSheet } from './sprite-loader';
 
 type ExpandedTile = {
@@ -17,14 +18,22 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
       return Promise.all([
         levelSpec,
         loadSpriteSheet(levelSpec.spriteSheet),
-      ]).then(([levelSpec, backgroundSprites]: [LevelSpec, SpriteSheet]) => {
-        const level = new Level();
+        loadMusicSheet(levelSpec.musicSheet),
+      ]).then(
+        ([levelSpec, backgroundSprites, musicPlayer]: [
+          LevelSpec,
+          SpriteSheet,
+          MusicPlayer
+        ]) => {
+          const level = new Level();
+          level.musicController.setPlayer(musicPlayer);
 
-        setupBackground(levelSpec, level, backgroundSprites);
-        setupEntities(levelSpec, level, entityFactory);
+          setupBackground(levelSpec, level, backgroundSprites);
+          setupEntities(levelSpec, level, entityFactory);
 
-        return level;
-      });
+          return level;
+        }
+      );
     });
   };
 }
