@@ -1,7 +1,7 @@
 import type { AudioBoard } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
-import { loadSpriteSheet } from '../loaders';
 import { loadAudioBoard } from '../loaders/audio-loader';
+import { loadSpriteSheet } from '../loaders/sprite-loader';
 import { Go, GO_TRAIT } from '../traits/go';
 import { Jump, JUMP_TRAIT } from '../traits/jump';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';

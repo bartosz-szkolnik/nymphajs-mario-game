@@ -3,7 +3,7 @@ import { loadJSON, SpriteSheet } from '@nymphajs/dom-api';
 import { Factory } from '../entities';
 import { createBackgroundLayer } from '../layers/background-layer';
 import { createSpriteLayer } from '../layers/sprites-layer';
-import { loadSpriteSheet } from '../loaders';
+import { loadSpriteSheet } from './sprite-loader';
 
 type ExpandedTile = {
   tile: TileSpec;

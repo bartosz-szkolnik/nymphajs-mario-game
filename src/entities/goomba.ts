@@ -1,6 +1,6 @@
 import { Entity, Trait } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
-import { loadSpriteSheet } from '../loaders';
+import { loadSpriteSheet } from '../loaders/sprite-loader';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
 import { PendulumMove, PENDULUM_MOVE_TRAIT } from '../traits/pendulum-move';
 import { Physics, PHYSICS_TRAIT } from '../traits/physics';

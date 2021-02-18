@@ -1,6 +1,6 @@
 import { Entity, GameContext, Level, Trait } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
-import { loadSpriteSheet } from '../loaders';
+import { loadSpriteSheet } from '../loaders/sprite-loader';
 import { Gravity } from '../traits/gravity';
 import { Killable, KILLABLE_TRAIT } from '../traits/killable';
 import { STOMPER_TRAIT } from '../traits/stomper';
