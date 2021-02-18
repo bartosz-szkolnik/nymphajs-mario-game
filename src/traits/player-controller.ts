@@ -1,6 +1,5 @@
 import { Entity, GameContext, Level, Trait, Vec2 } from '@nymphajs/core';
 import { Killable, KILLABLE_TRAIT } from './killable';
-import { Stomper, STOMPER_TRAIT } from './stomper';
 
 export const PLAYER_CONTROLLER_TRAIT = 'playerController';
 
@@ -12,14 +11,14 @@ export class PlayerController extends Trait {
 
   constructor() {
     super(PLAYER_CONTROLLER_TRAIT);
+
+    this.listen('stomp', () => {
+      this.score += 100;
+    });
   }
 
   setPlayer(entity: Entity) {
     this.player = entity;
-
-    this.player.getTrait<Stomper>(STOMPER_TRAIT).events.listen('stomp', () => {
-      this.score += 100;
-    });
   }
 
   update(entity: Entity, { deltaTime }: GameContext, level: Level) {

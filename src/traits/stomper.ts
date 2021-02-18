@@ -4,6 +4,7 @@ import { Killable, KILLABLE_TRAIT } from './killable';
 export const STOMPER_TRAIT = 'stomper';
 
 export class Stomper extends Trait {
+  static EVENT_STOMP = Symbol('stomp');
   bounceSpeed = 400;
 
   constructor() {
@@ -26,8 +27,8 @@ export class Stomper extends Trait {
     if (us.vel.y > them.vel.y) {
       this.queue(() => this.bounce(us, them));
 
-      this.events.emit('stomp');
       us.sounds.add('stomp');
+      us.events.emit(Stomper.EVENT_STOMP, us, them);
     }
   }
 }
