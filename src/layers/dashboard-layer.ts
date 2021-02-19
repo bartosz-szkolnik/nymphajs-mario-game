@@ -23,8 +23,12 @@ export function createDashboardLayer(font: Font, level: Level) {
   const lineTwo = font.size * 2;
 
   return function drawDashboard(context: CanvasRenderingContext2D) {
-    const playerTrait = getPlayerTrait(level)!;
-    const timerTrait = getTimerTrait(level)!;
+    const playerTrait = getPlayerTrait(level);
+    const timerTrait = getTimerTrait(level);
+
+    if (!playerTrait || !timerTrait) {
+      return;
+    }
 
     const currentTime = timerTrait.currentTime.toFixed().padStart(3, '0');
     const score = String(playerTrait.score).padStart(6, '0');
