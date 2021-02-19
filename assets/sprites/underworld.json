@@ -32,6 +32,18 @@
       "index": [26, 2]
     },
     {
+      "name": "coin-1",
+      "index": [24, 3]
+    },
+    {
+      "name": "coin-2",
+      "index": [25, 4]
+    },
+    {
+      "name": "coin-3",
+      "index": [26, 4]
+    },
+    {
       "name": "pipe-insert-vert-left",
       "index": [0, 12]
     },

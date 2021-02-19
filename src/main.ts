@@ -8,6 +8,7 @@ import { loadFont } from './loaders/font-loader';
 import { createLevelLoader } from './loaders/level-loader';
 import { createPlayer, createPlayerEnv } from './player';
 import { BrickCollisionHandler } from './tiles/brick';
+import { CoinCollisionHandler } from './tiles/coin';
 import { GroundCollisionHandler } from './tiles/ground';
 import { Player, PLAYER_TRAIT } from './traits/player';
 
@@ -21,10 +22,11 @@ async function main(canvas: HTMLCanvasElement) {
   ]);
 
   const loadLevel = createLevelLoader(entityFactory);
-  const level = await loadLevel('1-1');
+  const level = await loadLevel('debug-coin');
 
   level.tileCollider.addCollisionHandler(new GroundCollisionHandler());
   level.tileCollider.addCollisionHandler(new BrickCollisionHandler());
+  level.tileCollider.addCollisionHandler(new CoinCollisionHandler());
 
   const camera = new Camera();
 
