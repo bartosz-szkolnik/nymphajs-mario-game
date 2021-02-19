@@ -1,5 +1,8 @@
 {
   "main": {
     "url": "/music/overworld.ogg"
+  },
+  "hurry": {
+    "url": "/music/hurry.ogg"
   }
 }

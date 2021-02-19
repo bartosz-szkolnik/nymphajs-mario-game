@@ -9,6 +9,7 @@ import { createLevelLoader } from './loaders/level-loader';
 import { createPlayer, createPlayerEnv } from './player';
 import { BrickCollisionHandler } from './tiles/brick';
 import { GroundCollisionHandler } from './tiles/ground';
+import { Player, PLAYER_TRAIT } from './traits/player';
 
 async function main(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext('2d')!;
@@ -28,6 +29,8 @@ async function main(canvas: HTMLCanvasElement) {
   const camera = new Camera();
 
   const mario = createPlayer(entityFactory.mario());
+  mario.getTrait<Player>(PLAYER_TRAIT).displayName = 'MARIO';
+  level.entities.add(mario);
 
   const input = setupKeyboard(mario);
   input.listenTo(window);
@@ -36,7 +39,7 @@ async function main(canvas: HTMLCanvasElement) {
   level.entities.add(playerEnv);
 
   level.compositor.addLayer(createCollisionLayer(level));
-  level.compositor.addLayer(createDashboardLayer(font, playerEnv));
+  level.compositor.addLayer(createDashboardLayer(font, level));
 
   const gameContext: GameContext = {
     deltaTime: 0,
@@ -55,11 +58,6 @@ async function main(canvas: HTMLCanvasElement) {
   const timer = new Timer(1 / 60);
   timer.setUpdateFn(update);
   timer.start();
-
-  const player = level.musicController.player;
-  if (player) {
-    player.playTrack('main');
-  }
 
   document.addEventListener('keydown', (e) => {
     if (e.code === 'Escape') {

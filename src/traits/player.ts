@@ -7,6 +7,7 @@ export class Player extends Trait {
   coins = 0;
   lives = 3;
   score = 0;
+  displayName = '';
 
   constructor() {
     super(PLAYER_TRAIT);

@@ -6,15 +6,9 @@ export const PLAYER_CONTROLLER_TRAIT = 'playerController';
 export class PlayerController extends Trait {
   private player: Entity | null = null;
   checkpoint = new Vec2(0, 0);
-  time = 300;
-  score = 0;
 
   constructor() {
     super(PLAYER_CONTROLLER_TRAIT);
-
-    this.listen('stomp', () => {
-      this.score += 100;
-    });
   }
 
   setPlayer(entity: Entity) {
@@ -31,8 +25,6 @@ export class PlayerController extends Trait {
       this.player.pos.set(x, y);
       this.player.getTrait<Killable>(KILLABLE_TRAIT).revive();
       level.entities.add(this.player);
-    } else {
-      this.time -= deltaTime * 2;
     }
   }
 }

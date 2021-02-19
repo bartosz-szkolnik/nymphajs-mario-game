@@ -1,8 +1,9 @@
-import { Matrix, Tile, Level, MusicPlayer } from '@nymphajs/core';
+import { Matrix, Tile, Level, MusicPlayer, Entity } from '@nymphajs/core';
 import { loadJSON, SpriteSheet } from '@nymphajs/dom-api';
 import { Factory } from '../entities';
 import { createBackgroundLayer } from '../layers/background-layer';
 import { createSpriteLayer } from '../layers/sprites-layer';
+import { LevelTimer, LEVEL_TIMER_TRAIT } from '../traits/level-timer';
 import { loadMusicSheet } from './music-loader';
 import { loadSpriteSheet } from './sprite-loader';
 
@@ -30,6 +31,7 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
 
           setupBackground(levelSpec, level, backgroundSprites);
           setupEntities(levelSpec, level, entityFactory);
+          setupBehavior(level);
 
           return level;
         }
@@ -149,4 +151,26 @@ function setupEntities(
 
   const spriteLayer = createSpriteLayer(level.entities);
   level.compositor.addLayer(spriteLayer);
+}
+
+function createTimer() {
+  const timer = new Entity();
+  timer.addTrait(LEVEL_TIMER_TRAIT, new LevelTimer());
+
+  return timer;
+}
+
+function setupBehavior(level: Level) {
+  const timer = createTimer();
+
+  const controller = level.musicController;
+  level.events.listen(LevelTimer.EVENT_TIMER_OK, () => {
+    controller.playTheme();
+  });
+
+  level.events.listen(LevelTimer.EVENT_TIMER_HURRY, () => {
+    controller.playHurryTheme();
+  });
+
+  level.entities.add(timer);
 }
