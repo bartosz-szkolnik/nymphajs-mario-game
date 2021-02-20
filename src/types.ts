@@ -23,10 +23,10 @@ type EntitySpec = {
 type LevelSpec = {
   spriteSheet: string;
   musicSheet: string;
+  patternSheet: string;
   layers: {
     tiles: TileSpec[];
   }[];
-  patterns?: Patterns;
   entities: EntitySpec[];
 };
 

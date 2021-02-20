@@ -20,16 +20,18 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
         levelSpec,
         loadSpriteSheet(levelSpec.spriteSheet),
         loadMusicSheet(levelSpec.musicSheet),
+        loadPatterns(levelSpec.patternSheet),
       ]).then(
-        ([levelSpec, backgroundSprites, musicPlayer]: [
+        ([levelSpec, backgroundSprites, musicPlayer, patterns]: [
           LevelSpec,
           SpriteSheet,
-          MusicPlayer
+          MusicPlayer,
+          Patterns
         ]) => {
           const level = new Level();
           level.musicController.setPlayer(musicPlayer);
 
-          setupBackground(levelSpec, level, backgroundSprites);
+          setupBackground(levelSpec, level, backgroundSprites, patterns);
           setupEntities(levelSpec, level, entityFactory);
           setupBehavior(level);
 
@@ -121,9 +123,10 @@ function* expandRanges(ranges: TileSpec['ranges']) {
 function setupBackground(
   levelSpec: LevelSpec,
   level: Level,
-  backgroundSprites: SpriteSheet
+  backgroundSprites: SpriteSheet,
+  patterns: Patterns
 ) {
-  const { layers, patterns } = levelSpec;
+  const { layers } = levelSpec;
   layers.forEach((layer) => {
     const grid = createGrid(layer.tiles, patterns);
 
@@ -173,4 +176,8 @@ function setupBehavior(level: Level) {
   });
 
   level.entities.add(timer);
+}
+
+function loadPatterns(name: string) {
+  return loadJSON<Patterns>(`sprites/patterns/${name}`);
 }
