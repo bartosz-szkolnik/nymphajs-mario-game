@@ -1,7 +1,5 @@
 import { Entity, Trait, Level, GameContext } from '@nymphajs/core';
 
-export const LEVEL_TIMER_TRAIT = 'level-timer';
-
 export class LevelTimer extends Trait {
   static EVENT_TIMER_HURRY = Symbol('timer-hurry');
   static EVENT_TIMER_OK = Symbol('timer-ok');
@@ -10,10 +8,6 @@ export class LevelTimer extends Trait {
   currentTime = this.totalTime;
   hurryTime = 100;
   hurryEmitted: boolean | null = null;
-
-  constructor() {
-    super(LEVEL_TIMER_TRAIT);
-  }
 
   update(entity: Entity, { deltaTime }: GameContext, level: Level) {
     this.currentTime -= deltaTime * 2;

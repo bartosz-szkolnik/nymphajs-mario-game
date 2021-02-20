@@ -1,10 +1,7 @@
-import { Entity, Level } from '@nymphajs/core';
+import { Entity } from '@nymphajs/core';
 import { Renderable } from '@nymphajs/dom-api';
-import { Player, PLAYER_TRAIT } from './traits/player';
-import {
-  PlayerController,
-  PLAYER_CONTROLLER_TRAIT,
-} from './traits/player-controller';
+import { Player } from './traits/player';
+import { PlayerController } from './traits/player-controller';
 
 export function createPlayerEnv(playerEntity: Entity) {
   const playerEnv = new Entity();
@@ -12,18 +9,21 @@ export function createPlayerEnv(playerEntity: Entity) {
   playerController.setPlayer(playerEntity);
   playerController.checkpoint.set(64, 64);
 
-  playerEnv.addTrait(PLAYER_CONTROLLER_TRAIT, playerController);
+  playerEnv.addTrait(playerController);
   return playerEnv;
 }
 
-export function createPlayer(entity: Renderable) {
-  entity.addTrait(PLAYER_TRAIT, new Player());
-  return entity;
+export function makePlayer(entity: Renderable, name: string) {
+  const player = new Player();
+  player.displayName = name;
+
+  entity.isPlayer = true;
+  entity.addTrait(player);
 }
 
-export function* findPlayers(level: Level) {
-  for (const entity of level.entities) {
-    if (entity.hasTrait(PLAYER_TRAIT)) {
+export function* findPlayers(entities: Set<Entity>) {
+  for (const entity of entities) {
+    if (entity.has(Player)) {
       yield entity;
     }
   }

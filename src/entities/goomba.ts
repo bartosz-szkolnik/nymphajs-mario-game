@@ -1,35 +1,30 @@
 import { Entity, Trait } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders/sprite-loader';
-import { Killable, KILLABLE_TRAIT } from '../traits/killable';
-import { PendulumMove, PENDULUM_MOVE_TRAIT } from '../traits/pendulum-move';
-import { Physics, PHYSICS_TRAIT } from '../traits/physics';
-import { SOLID_TRAIT, Solid } from '../traits/solid';
-import { STOMPER_TRAIT } from '../traits/stomper';
-import { BEHAVIOR_TRAIT } from './constants';
+import { Killable } from '../traits/killable';
+import { PendulumMove } from '../traits/pendulum-move';
+import { Physics } from '../traits/physics';
+import { Solid } from '../traits/solid';
+import { Stomper } from '../traits/stomper';
 
 export async function loadGoomba() {
   return loadSpriteSheet('goomba').then(createGoombaFactory);
 }
 
 class Behavior extends Trait {
-  constructor() {
-    super(BEHAVIOR_TRAIT);
-  }
-
   collides(us: Entity, them: Entity) {
-    const killable = us.getTrait<Killable>(KILLABLE_TRAIT);
+    const killable = us.get(Killable);
     if (killable.dead) {
       return;
     }
 
-    if (them.hasTrait(STOMPER_TRAIT)) {
+    if (them.has(Stomper)) {
       if (them.vel.y > us.vel.y) {
         killable.kill();
 
-        us.getTrait<PendulumMove>(PENDULUM_MOVE_TRAIT).speed = 0;
+        us.get(PendulumMove).speed = 0;
       } else {
-        them.getTrait<Killable>(KILLABLE_TRAIT).kill();
+        them.get(Killable).kill();
       }
     }
   }
@@ -39,7 +34,7 @@ function createGoombaFactory(sprite: SpriteSheet) {
   const walkAnim = sprite.animations.get('walk');
 
   function routeAnim(goomba: Entity) {
-    if (goomba.getTrait<Killable>(KILLABLE_TRAIT).dead) {
+    if (goomba.get(Killable).dead) {
       return 'flat';
     }
 
@@ -58,11 +53,11 @@ function createGoombaFactory(sprite: SpriteSheet) {
     const goomba = new Renderable();
     goomba.size.set(16, 16);
 
-    goomba.addTrait(PHYSICS_TRAIT, new Physics());
-    goomba.addTrait(SOLID_TRAIT, new Solid());
-    goomba.addTrait(PENDULUM_MOVE_TRAIT, new PendulumMove());
-    goomba.addTrait(BEHAVIOR_TRAIT, new Behavior());
-    goomba.addTrait(KILLABLE_TRAIT, new Killable());
+    goomba.addTrait(new Physics());
+    goomba.addTrait(new Solid());
+    goomba.addTrait(new PendulumMove());
+    goomba.addTrait(new Behavior());
+    goomba.addTrait(new Killable());
 
     goomba.draw = (ctx) => drawGoomba(goomba, ctx);
 

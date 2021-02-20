@@ -2,10 +2,9 @@ import { Entity, GameContext, Level, Trait } from '@nymphajs/core';
 import { Renderable, SpriteSheet } from '@nymphajs/dom-api';
 import { loadSpriteSheet } from '../loaders/sprite-loader';
 import { Gravity } from '../traits/gravity';
-import { Killable, KILLABLE_TRAIT } from '../traits/killable';
-import { STOMPER_TRAIT } from '../traits/stomper';
-import { Velocity, VELOCITY_TRAIT } from '../traits/velocity';
-import { BEHAVIOR_TRAIT } from './constants';
+import { Killable } from '../traits/killable';
+import { Stomper } from '../traits/stomper';
+import { Velocity } from '../traits/velocity';
 
 export async function loadBullet() {
   return loadSpriteSheet('bullet').then(createBulletFactory);
@@ -14,28 +13,24 @@ export async function loadBullet() {
 class Behavior extends Trait {
   private gravity = new Gravity();
 
-  constructor() {
-    super(BEHAVIOR_TRAIT);
-  }
-
   collides(us: Entity, them: Entity) {
-    const killable = us.getTrait<Killable>(KILLABLE_TRAIT);
+    const killable = us.get(Killable);
     if (killable.dead) {
       return;
     }
 
-    if (them.hasTrait(STOMPER_TRAIT)) {
+    if (them.has(Stomper)) {
       if (them.vel.y > us.vel.y) {
         killable.kill();
         us.vel.set(100, -200);
       } else {
-        them.getTrait<Killable>(KILLABLE_TRAIT).kill();
+        them.get(Killable).kill();
       }
     }
   }
 
   update(entity: Entity, gameContext: GameContext, level: Level) {
-    if (entity.getTrait<Killable>(KILLABLE_TRAIT).dead) {
+    if (entity.get(Killable).dead) {
       this.gravity.update(entity, gameContext, level);
     }
   }
@@ -51,9 +46,9 @@ function createBulletFactory(sprite: SpriteSheet) {
     bullet.size.set(16, 14);
     bullet.vel.set(80, 0);
 
-    bullet.addTrait(VELOCITY_TRAIT, new Velocity());
-    bullet.addTrait(BEHAVIOR_TRAIT, new Behavior());
-    bullet.addTrait(KILLABLE_TRAIT, new Killable());
+    bullet.addTrait(new Velocity());
+    bullet.addTrait(new Behavior());
+    bullet.addTrait(new Killable());
 
     bullet.draw = (ctx) => drawBullet(bullet, ctx);
 

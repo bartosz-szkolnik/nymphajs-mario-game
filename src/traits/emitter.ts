@@ -6,16 +6,10 @@ type EmitterFn = (
   level: Level
 ) => void;
 
-export const EMITTER_TRAIT = 'emitter';
-
 export class Emitter extends Trait {
   private interval = 4;
   private cooldown = this.interval;
   private emitters: EmitterFn[] = [];
-
-  constructor() {
-    super(EMITTER_TRAIT);
-  }
 
   update(entity: Entity, gameContext: GameContext, level: Level) {
     const { deltaTime } = gameContext;

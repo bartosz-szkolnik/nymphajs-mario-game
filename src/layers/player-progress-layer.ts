@@ -1,10 +1,10 @@
-import type { Level } from '@nymphajs/core';
+import type { Entity, Level } from '@nymphajs/core';
 import { Font, isRenderable } from '@nymphajs/dom-api';
 import { findPlayers } from '../player';
-import { Player, PLAYER_TRAIT } from '../traits/player';
+import { Player } from '../traits/player';
 
-function getPlayer(level: Level) {
-  for (const player of findPlayers(level)) {
+function getPlayer(entities: Set<Entity>) {
+  for (const player of findPlayers(entities)) {
     return player;
   }
 }
@@ -18,12 +18,12 @@ export function createPlayerProgressLayer(font: Font, level: Level) {
   const spriteBufferContext = spriteBuffer.getContext('2d')!;
 
   return function drawPlayerProgress(context: CanvasRenderingContext2D) {
-    const entity = getPlayer(level);
+    const entity = getPlayer(level.entities);
     if (!entity) {
       return;
     }
 
-    const playerTrait = entity.getTrait<Player>(PLAYER_TRAIT);
+    const playerTrait = entity.get(Player);
     const lives = String(playerTrait.lives).padStart(3, ' ');
 
     font.print(`WORLD ${level.name}`, context, size * 12, size * 12);

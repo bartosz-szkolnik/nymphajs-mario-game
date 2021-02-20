@@ -5,14 +5,8 @@ import {
   CollisionMatch,
 } from '@nymphajs/core';
 
-export const SOLID_TRAIT = 'solid';
-
 export class Solid extends Trait {
   obstructs = true;
-
-  constructor() {
-    super(SOLID_TRAIT);
-  }
 
   obstruct(entity: Entity, side: CollisionDirection, match: CollisionMatch) {
     if (!this.obstructs) {

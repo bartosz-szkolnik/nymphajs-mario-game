@@ -1,19 +1,19 @@
-import type { Level } from '@nymphajs/core';
+import type { Entity, Level } from '@nymphajs/core';
 import type { Font } from '@nymphajs/dom-api';
 import { findPlayers } from '../player';
-import { LevelTimer, LEVEL_TIMER_TRAIT } from '../traits/level-timer';
-import { Player, PLAYER_TRAIT } from '../traits/player';
+import { LevelTimer } from '../traits/level-timer';
+import { Player } from '../traits/player';
 
-function getPlayerTrait(level: Level) {
-  for (const player of findPlayers(level)) {
-    return player.getTrait<Player>(PLAYER_TRAIT);
+function getPlayerTrait(entities: Set<Entity>) {
+  for (const player of findPlayers(entities)) {
+    return player.get(Player);
   }
 }
 
-function getTimerTrait(level: Level) {
-  for (const entity of level.entities) {
-    if (entity.hasTrait(LEVEL_TIMER_TRAIT)) {
-      return entity.getTrait<LevelTimer>(LEVEL_TIMER_TRAIT);
+function getTimerTrait(entities: Set<Entity>) {
+  for (const entity of entities) {
+    if (entity.has(LevelTimer)) {
+      return entity.get(LevelTimer);
     }
   }
 }
@@ -23,8 +23,8 @@ export function createDashboardLayer(font: Font, level: Level) {
   const lineTwo = font.size * 2;
 
   return function drawDashboard(context: CanvasRenderingContext2D) {
-    const playerTrait = getPlayerTrait(level);
-    const timerTrait = getTimerTrait(level);
+    const playerTrait = getPlayerTrait(level.entities);
+    const timerTrait = getTimerTrait(level.entities);
 
     if (!playerTrait || !timerTrait) {
       return;

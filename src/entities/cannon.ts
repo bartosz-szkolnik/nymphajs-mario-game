@@ -2,7 +2,7 @@ import type { AudioBoard, Entity, GameContext, Level } from '@nymphajs/core';
 import { Renderable } from '@nymphajs/dom-api';
 import { loadAudioBoard } from '../loaders/audio-loader';
 import { findPlayers } from '../player';
-import { Emitter, EMITTER_TRAIT } from '../traits/emitter';
+import { Emitter } from '../traits/emitter';
 
 const HOLD_FIRE_THRESHOLD = 30;
 
@@ -15,7 +15,7 @@ export async function loadCannon(audioContext: AudioContext) {
 function createCannonFactory(audioBoard: AudioBoard) {
   function emitBullet(cannon: Entity, gameContext: GameContext, level: Level) {
     let direction = 1;
-    for (const player of findPlayers(level)) {
+    for (const player of findPlayers(level.entities)) {
       if (
         player.pos.x > cannon.pos.x - HOLD_FIRE_THRESHOLD &&
         player.pos.x < cannon.pos.x + HOLD_FIRE_THRESHOLD
@@ -43,7 +43,7 @@ function createCannonFactory(audioBoard: AudioBoard) {
     const emitter = new Emitter();
     emitter.addEmitter(emitBullet);
 
-    cannon.addTrait(EMITTER_TRAIT, emitter);
+    cannon.addTrait(emitter);
     return cannon;
   };
 }

@@ -1,4 +1,5 @@
 import { TileCollisionContext, TileCollisionHandler } from '@nymphajs/core';
+import { Player } from '../traits/player';
 
 export class BrickCollisionHandler implements TileCollisionHandler {
   tileType: string = 'brick';
@@ -28,7 +29,7 @@ export class BrickCollisionHandler implements TileCollisionHandler {
         entity.obstruct('bottom', match);
       }
     } else if (entity.vel.y < 0) {
-      if (entity.hasTrait('player')) {
+      if (entity.has(Player)) {
         const grid = resolver.matrix;
         grid.delete(match.indexX, match.indexY);
 

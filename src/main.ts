@@ -17,11 +17,10 @@ import { createPlayerProgressLayer } from './layers/player-progress-layer';
 import { createTextLayer } from './layers/text-layer';
 import { loadFont } from './loaders/font-loader';
 import { createLevelLoader } from './loaders/level-loader';
-import { createPlayer, createPlayerEnv } from './player';
+import { createPlayerEnv, findPlayers, makePlayer } from './player';
 import { BrickCollisionHandler } from './tiles/brick';
 import { CoinCollisionHandler } from './tiles/coin';
 import { GroundCollisionHandler } from './tiles/ground';
-import { Player, PLAYER_TRAIT } from './traits/player';
 
 async function main(canvas: HTMLCanvasElement) {
   const videoContext = canvas.getContext('2d')!;
@@ -33,31 +32,13 @@ async function main(canvas: HTMLCanvasElement) {
   ]);
 
   const loadLevel = createLevelLoader(entityFactory);
-
   const sceneRunner = new SceneRunner();
 
-  const mario = createPlayer(entityFactory.mario());
-  mario.getTrait<Player>(PLAYER_TRAIT).displayName = 'MARIO';
+  const mario = entityFactory.mario();
+  makePlayer(mario, 'MARIO');
 
   const inputRouter = setupKeyboard(window);
   inputRouter.addReceiver(mario);
-
-  const gameContext: GameContext = {
-    deltaTime: 0,
-    videoContext,
-    audioContext,
-    entityFactory,
-  };
-
-  function update(deltaTime: number) {
-    gameContext.deltaTime = deltaTime;
-    sceneRunner.update(gameContext);
-  }
-
-  const timer = new Timer(1 / 60);
-  timer.setUpdateFn(update);
-  timer.start();
-  runLevel('debug-progression');
 
   async function runLevel(name: string) {
     const level = await loadLevel(name);
@@ -72,12 +53,9 @@ async function main(canvas: HTMLCanvasElement) {
       Level.EVENT_TRIGGER,
       (spec: TriggerSpec, trigger: Entity, touches: Set<Entity>) => {
         if (spec.type === 'goto') {
-          for (const entity of touches) {
-            if (entity.hasTrait(PLAYER_TRAIT)) {
-              runLevel(spec.name);
-
-              return;
-            }
+          for (const _ of findPlayers(touches)) {
+            runLevel(spec.name);
+            return;
           }
         }
       }
@@ -108,16 +86,32 @@ async function main(canvas: HTMLCanvasElement) {
 
     sceneRunner.addScene(level);
 
-    document.addEventListener('keydown', (e) => {
-      if (e.code === 'Escape') {
-        console.log('Animation stopped!');
-        cancelAnimationFrame(timer.animationFrameId);
-        level.musicController.player?.pauseAll();
-      }
-    });
-
     sceneRunner.runNext();
   }
+
+  const gameContext: GameContext = {
+    deltaTime: 0,
+    videoContext,
+    audioContext,
+    entityFactory,
+  };
+
+  function update(deltaTime: number) {
+    gameContext.deltaTime = deltaTime;
+    sceneRunner.update(gameContext);
+  }
+
+  const timer = new Timer(1 / 60);
+  timer.setUpdateFn(update);
+  timer.start();
+  runLevel('1-1');
+
+  document.addEventListener('keydown', (e) => {
+    if (e.code === 'Escape') {
+      console.log('Animation stopped!');
+      cancelAnimationFrame(timer.animationFrameId);
+    }
+  });
 }
 
 const canvasModule = new CanvasModule();

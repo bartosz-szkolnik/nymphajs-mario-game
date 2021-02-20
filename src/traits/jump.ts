@@ -1,6 +1,5 @@
 import { CollisionDirection, Entity, GameContext, Trait } from '@nymphajs/core';
 
-export const JUMP_TRAIT = 'jump';
 const SPEED_BOOST = 0.3;
 
 export class Jump extends Trait {
@@ -10,10 +9,6 @@ export class Jump extends Trait {
   private ready = 0;
   private requestTime = 0;
   private gracePeriod = 0.1;
-
-  constructor() {
-    super(JUMP_TRAIT);
-  }
 
   get falling() {
     return this.ready < 0;

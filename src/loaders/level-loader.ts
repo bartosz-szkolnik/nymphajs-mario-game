@@ -3,8 +3,8 @@ import { loadJSON, SpriteSheet } from '@nymphajs/dom-api';
 import { Factory } from '../entities';
 import { createBackgroundLayer } from '../layers/background-layer';
 import { createSpriteLayer } from '../layers/sprites-layer';
-import { LevelTimer, LEVEL_TIMER_TRAIT } from '../traits/level-timer';
-import { TRIGGER_TRAIT, Trigger } from '../traits/trigger';
+import { LevelTimer } from '../traits/level-timer';
+import { Trigger } from '../traits/trigger';
 import { loadMusicSheet } from './music-loader';
 import { loadSpriteSheet } from './sprite-loader';
 
@@ -161,16 +161,9 @@ function setupEntities(
 
 function createTimer() {
   const timer = new Entity();
-  timer.addTrait(LEVEL_TIMER_TRAIT, new LevelTimer());
+  timer.addTrait(new LevelTimer());
 
   return timer;
-}
-
-function createTrigger() {
-  const entity = new Entity();
-  entity.addTrait(TRIGGER_TRAIT, new Trigger());
-
-  return entity;
 }
 
 function setupBehavior(level: Level) {
@@ -198,12 +191,14 @@ function setupTriggers(levelSpec: LevelSpec, level: Level) {
   }
 
   for (const triggerSpec of levelSpec.triggers) {
-    const entity = createTrigger();
-    entity
-      .getTrait<Trigger>(TRIGGER_TRAIT)
-      .conditions.push((entity, touches, _gc, level) => {
-        level.events.emit(Level.EVENT_TRIGGER, triggerSpec, entity, touches);
-      });
+    const trigger = new Trigger();
+
+    trigger.conditions.push((entity, touches, _gc, level) => {
+      level.events.emit(Level.EVENT_TRIGGER, triggerSpec, entity, touches);
+    });
+
+    const entity = new Entity();
+    entity.addTrait(trigger);
 
     entity.pos.set(triggerSpec.pos[0], triggerSpec.pos[1]);
     entity.size.set(64, 64);

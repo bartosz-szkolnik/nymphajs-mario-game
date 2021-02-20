@@ -1,7 +1,7 @@
 import { KeyboardState } from '@nymphajs/dom-api';
 import { InputRouter } from '@nymphajs/core';
-import { Go, GO_TRAIT } from './traits/go';
-import { Jump, JUMP_TRAIT } from './traits/jump';
+import { Go } from './traits/go';
+import { Jump } from './traits/jump';
 
 const SPACE = 'Space';
 const ARROW_LEFT = 'ArrowLeft';
@@ -16,9 +16,9 @@ export function setupKeyboard(window: Window) {
 
   input.addMapping(SPACE, (keyState) => {
     if (keyState) {
-      router.route((entity) => entity.getTrait<Jump>(JUMP_TRAIT).start());
+      router.route((entity) => entity.get(Jump).start());
     } else {
-      router.route((entity) => entity.getTrait<Jump>(JUMP_TRAIT).cancel());
+      router.route((entity) => entity.get(Jump).cancel());
     }
   });
 
@@ -27,16 +27,11 @@ export function setupKeyboard(window: Window) {
   });
 
   input.addMapping(ARROW_RIGHT, (keyState) => {
-    router.route(
-      (entity) => (entity.getTrait<Go>(GO_TRAIT).direction += keyState ? 1 : -1)
-    );
+    router.route((entity) => (entity.get(Go).direction += keyState ? 1 : -1));
   });
 
   input.addMapping(ARROW_LEFT, (keyState) => {
-    router.route(
-      (entity) =>
-        (entity.getTrait<Go>(GO_TRAIT).direction += -keyState ? -1 : 1)
-    );
+    router.route((entity) => (entity.get(Go).direction += -keyState ? -1 : 1));
   });
 
   return router;

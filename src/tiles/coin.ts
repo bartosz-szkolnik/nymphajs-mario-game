@@ -1,5 +1,5 @@
 import { TileCollisionContext, TileCollisionHandler } from '@nymphajs/core';
-import { Player, PLAYER_TRAIT } from '../traits/player';
+import { Player } from '../traits/player';
 
 export class CoinCollisionHandler implements TileCollisionHandler {
   tileType = 'coin';
@@ -13,8 +13,8 @@ export class CoinCollisionHandler implements TileCollisionHandler {
   }
 
   private handle({ entity, resolver, match }: TileCollisionContext) {
-    if (entity.hasTrait(PLAYER_TRAIT)) {
-      entity.getTrait<Player>(PLAYER_TRAIT).addCoins(1);
+    if (entity.has(Player)) {
+      entity.get(Player).addCoins(1);
       const grid = resolver.matrix;
       grid.delete(match.indexX, match.indexY);
     }

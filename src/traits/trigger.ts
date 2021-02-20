@@ -1,6 +1,5 @@
 import { Entity, Trait, Level, GameContext } from '@nymphajs/core';
 
-export const TRIGGER_TRAIT = 'trigger';
 export type Condition = (
   entity: Entity,
   touches: Set<Entity>,
@@ -11,10 +10,6 @@ export type Condition = (
 export class Trigger extends Trait {
   touches = new Set<Entity>();
   conditions: Condition[] = [];
-
-  constructor() {
-    super(TRIGGER_TRAIT);
-  }
 
   update(entity: Entity, gameContext: GameContext, level: Level) {
     if (this.touches.size > 0) {

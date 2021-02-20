@@ -1,7 +1,6 @@
 import { Entity, Trait } from '@nymphajs/core';
 import { Stomper } from './stomper';
 
-export const PLAYER_TRAIT = 'player';
 const COIN_LIVE_THRESHOLD = 100;
 
 export class Player extends Trait {
@@ -11,7 +10,7 @@ export class Player extends Trait {
   displayName = '';
 
   constructor() {
-    super(PLAYER_TRAIT);
+    super();
 
     this.listen(Stomper.EVENT_STOMP, () => {
       this.score += 100;
