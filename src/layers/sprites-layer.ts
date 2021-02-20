@@ -26,8 +26,8 @@ export function createSpriteLayer(
 
       context.drawImage(
         spriteBuffer,
-        entity.pos.x - camera.position.x,
-        entity.pos.y - camera.position.y
+        Math.floor(entity.pos.x - camera.position.x),
+        Math.floor(entity.pos.y - camera.position.y)
       );
     });
   };

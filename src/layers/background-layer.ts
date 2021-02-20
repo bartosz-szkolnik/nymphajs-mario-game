@@ -51,6 +51,10 @@ export function createBackgroundLayer(
 
     redraw(drawFrom, drawTo);
 
-    context.drawImage(buffer, -camera.position.x % 16, -camera.position.y);
+    context.drawImage(
+      buffer,
+      Math.floor(-camera.position.x % 16),
+      Math.floor(-camera.position.y)
+    );
   };
 }
