@@ -22,7 +22,7 @@ async function main(canvas: HTMLCanvasElement) {
   ]);
 
   const loadLevel = createLevelLoader(entityFactory);
-  const level = await loadLevel('debug-coin');
+  const level = await loadLevel('1-2');
 
   level.tileCollider.addCollisionHandler(new GroundCollisionHandler());
   level.tileCollider.addCollisionHandler(new BrickCollisionHandler());
@@ -32,8 +32,8 @@ async function main(canvas: HTMLCanvasElement) {
   mario.getTrait<Player>(PLAYER_TRAIT).displayName = 'MARIO';
   level.entities.add(mario);
 
-  const input = setupKeyboard(mario);
-  input.listenTo(window);
+  const inputRouter = setupKeyboard(window);
+  inputRouter.addReceiver(mario);
 
   const playerEnv = createPlayerEnv(mario);
   level.entities.add(playerEnv);
