@@ -41,13 +41,13 @@ async function main(canvas: HTMLCanvasElement) {
   inputRouter.addReceiver(mario);
 
   async function runLevel(name: string) {
-    const level = await loadLevel(name);
-
     const loadScreen = new Scene();
     loadScreen.compositor.addLayer(createColorLayer('#000'));
     loadScreen.compositor.addLayer(createTextLayer(font, `Loading ${name}...`));
     sceneRunner.addScene(loadScreen);
     sceneRunner.runNext();
+
+    const level = await loadLevel(name);
 
     level.events.listen<any>(
       Level.EVENT_TRIGGER,
@@ -105,13 +105,6 @@ async function main(canvas: HTMLCanvasElement) {
   timer.setUpdateFn(update);
   timer.start();
   runLevel('1-1');
-
-  document.addEventListener('keydown', (e) => {
-    if (e.code === 'Escape') {
-      console.log('Animation stopped!');
-      cancelAnimationFrame(timer.animationFrameId);
-    }
-  });
 }
 
 const canvasModule = new CanvasModule();
