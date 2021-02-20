@@ -1,4 +1,4 @@
-import { Camera, GameContext, Timer } from '@nymphajs/core';
+import { GameContext, Timer } from '@nymphajs/core';
 import { CanvasModule } from '@nymphajs/dom-api';
 import { loadEntities } from './entities';
 import { setupKeyboard } from './input';
@@ -13,22 +13,20 @@ import { GroundCollisionHandler } from './tiles/ground';
 import { Player, PLAYER_TRAIT } from './traits/player';
 
 async function main(canvas: HTMLCanvasElement) {
-  const ctx = canvas.getContext('2d')!;
-  const audioCtx = new AudioContext();
+  const videoContext = canvas.getContext('2d')!;
+  const audioContext = new AudioContext();
 
   const [entityFactory, font] = await Promise.all([
-    loadEntities(audioCtx),
+    loadEntities(audioContext),
     loadFont(),
   ]);
 
   const loadLevel = createLevelLoader(entityFactory);
-  const level = await loadLevel('1-1');
+  const level = await loadLevel('debug-coin');
 
   level.tileCollider.addCollisionHandler(new GroundCollisionHandler());
   level.tileCollider.addCollisionHandler(new BrickCollisionHandler());
   level.tileCollider.addCollisionHandler(new CoinCollisionHandler());
-
-  const camera = new Camera();
 
   const mario = createPlayer(entityFactory.mario());
   mario.getTrait<Player>(PLAYER_TRAIT).displayName = 'MARIO';
@@ -45,16 +43,15 @@ async function main(canvas: HTMLCanvasElement) {
 
   const gameContext: GameContext = {
     deltaTime: 0,
-    audioContext: audioCtx,
+    videoContext,
+    audioContext,
     entityFactory,
   };
 
   function update(deltaTime: number) {
     gameContext.deltaTime = deltaTime;
     level.update(gameContext);
-
-    camera.position.x = Math.max(0, mario.pos.x - 100);
-    level.compositor.draw(ctx, camera);
+    level.draw(gameContext);
   }
 
   const timer = new Timer(1 / 60);

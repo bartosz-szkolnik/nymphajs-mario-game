@@ -29,6 +29,7 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
           Patterns
         ]) => {
           const level = new Level();
+          level.name = name;
           level.musicController.setPlayer(musicPlayer);
 
           setupBackground(levelSpec, level, backgroundSprites, patterns);

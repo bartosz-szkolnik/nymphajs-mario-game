@@ -1,6 +1,6 @@
 {
-  "spriteSheet": "overworld",
-  "musicSheet": "silent",
+  "spriteSheet": "underworld",
+  "musicSheet": "underworld",
   "patternSheet": "overworld",
   "layers": [
     {
@@ -13,15 +13,6 @@
           "name": "ground",
           "type": "ground",
           "ranges": [[0, 212, 13, 2]]
-        }
-      ]
-    },
-    {
-      "tiles": [
-        {
-          "name": "coin",
-          "type": "coin",
-          "ranges": [[6, 100, 8, 5]]
         }
       ]
     }

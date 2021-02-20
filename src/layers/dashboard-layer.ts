@@ -39,7 +39,7 @@ export function createDashboardLayer(font: Font, level: Level) {
     font.print(`@x${playerTrait.coins}`, context, 96, lineTwo);
 
     font.print('WORLD', context, 152, lineOne);
-    font.print('1-1', context, 160, lineTwo);
+    font.print(level.name, context, 160, lineTwo);
 
     font.print('TIME', context, 200, lineOne);
     font.print(currentTime, context, 208, lineTwo);
