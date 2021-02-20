@@ -1,10 +1,11 @@
 import {
-  CompositionScene,
+  TimedScene,
   Entity,
   GameContext,
   Level,
   SceneRunner,
   Timer,
+  Scene,
 } from '@nymphajs/core';
 import { CanvasModule } from '@nymphajs/dom-api';
 import { loadEntities } from './entities';
@@ -13,6 +14,7 @@ import { createCollisionLayer } from './layers/collision-layer';
 import { createColorLayer } from './layers/color-layer';
 import { createDashboardLayer } from './layers/dashboard-layer';
 import { createPlayerProgressLayer } from './layers/player-progress-layer';
+import { createTextLayer } from './layers/text-layer';
 import { loadFont } from './loaders/font-loader';
 import { createLevelLoader } from './loaders/level-loader';
 import { createPlayer, createPlayerEnv } from './player';
@@ -60,6 +62,12 @@ async function main(canvas: HTMLCanvasElement) {
   async function runLevel(name: string) {
     const level = await loadLevel(name);
 
+    const loadScreen = new Scene();
+    loadScreen.compositor.addLayer(createColorLayer('#000'));
+    loadScreen.compositor.addLayer(createTextLayer(font, `Loading ${name}...`));
+    sceneRunner.addScene(loadScreen);
+    sceneRunner.runNext();
+
     level.events.listen<any>(
       Level.EVENT_TRIGGER,
       (spec: TriggerSpec, trigger: Entity, touches: Set<Entity>) => {
@@ -79,12 +87,13 @@ async function main(canvas: HTMLCanvasElement) {
     const dashboardLayer = createDashboardLayer(font, level);
 
     mario.pos.set(0, 0);
+    mario.vel.set(0, 0);
     level.entities.add(mario);
 
     const playerEnv = createPlayerEnv(mario);
     level.entities.add(playerEnv);
 
-    const waitScreen = new CompositionScene();
+    const waitScreen = new TimedScene();
     waitScreen.compositor.addLayer(createColorLayer('#000'));
     waitScreen.compositor.addLayer(dashboardLayer);
     waitScreen.compositor.addLayer(playerProgressLayer);
