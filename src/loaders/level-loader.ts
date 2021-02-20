@@ -4,6 +4,7 @@ import { Factory } from '../entities';
 import { createBackgroundLayer } from '../layers/background-layer';
 import { createSpriteLayer } from '../layers/sprites-layer';
 import { LevelTimer, LEVEL_TIMER_TRAIT } from '../traits/level-timer';
+import { TRIGGER_TRAIT, Trigger } from '../traits/trigger';
 import { loadMusicSheet } from './music-loader';
 import { loadSpriteSheet } from './sprite-loader';
 
@@ -34,6 +35,7 @@ export function createLevelLoader(entityFactory: Record<string, Factory>) {
 
           setupBackground(levelSpec, level, backgroundSprites, patterns);
           setupEntities(levelSpec, level, entityFactory);
+          setupTriggers(levelSpec, level);
           setupBehavior(level);
 
           return level;
@@ -164,6 +166,13 @@ function createTimer() {
   return timer;
 }
 
+function createTrigger() {
+  const entity = new Entity();
+  entity.addTrait(TRIGGER_TRAIT, new Trigger());
+
+  return entity;
+}
+
 function setupBehavior(level: Level) {
   const timer = createTimer();
 
@@ -181,4 +190,23 @@ function setupBehavior(level: Level) {
 
 function loadPatterns(name: string) {
   return loadJSON<Patterns>(`sprites/patterns/${name}`);
+}
+
+function setupTriggers(levelSpec: LevelSpec, level: Level) {
+  if (!levelSpec.triggers) {
+    return;
+  }
+
+  for (const triggerSpec of levelSpec.triggers) {
+    const entity = createTrigger();
+    entity
+      .getTrait<Trigger>(TRIGGER_TRAIT)
+      .conditions.push((entity, touches, _gc, level) => {
+        level.events.emit(Level.EVENT_TRIGGER, triggerSpec, entity, touches);
+      });
+
+    entity.pos.set(triggerSpec.pos[0], triggerSpec.pos[1]);
+    entity.size.set(64, 64);
+    level.entities.add(entity);
+  }
 }

@@ -1,6 +1,6 @@
 {
-  "spriteSheet": "underworld",
-  "musicSheet": "underworld",
+  "spriteSheet": "overworld",
+  "musicSheet": "silent",
   "patternSheet": "overworld",
   "layers": [
     {
@@ -17,9 +17,7 @@
       ]
     }
   ],
-
   "entities": [],
-
   "triggers": [
     {
       "type": "goto",

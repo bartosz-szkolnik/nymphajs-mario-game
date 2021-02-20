@@ -20,6 +20,12 @@ type EntitySpec = {
   position: [number, number];
 };
 
+type TriggerSpec = {
+  type: 'goto';
+  name: string;
+  pos: [number, number];
+};
+
 type LevelSpec = {
   spriteSheet: string;
   musicSheet: string;
@@ -28,6 +34,7 @@ type LevelSpec = {
     tiles: TileSpec[];
   }[];
   entities: EntitySpec[];
+  triggers: TriggerSpec[];
 };
 
 type SpriteSheetTile = {
