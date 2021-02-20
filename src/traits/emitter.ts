@@ -1,6 +1,10 @@
 import { Entity, Trait, Level, GameContext } from '@nymphajs/core';
 
-type EmitterFn = (entity: Entity, level: Level) => void;
+type EmitterFn = (
+  entity: Entity,
+  gameContext: GameContext,
+  level: Level
+) => void;
 
 export const EMITTER_TRAIT = 'emitter';
 
@@ -13,10 +17,11 @@ export class Emitter extends Trait {
     super(EMITTER_TRAIT);
   }
 
-  update(entity: Entity, { deltaTime }: GameContext, level: Level) {
+  update(entity: Entity, gameContext: GameContext, level: Level) {
+    const { deltaTime } = gameContext;
     this.cooldown -= deltaTime;
     if (this.cooldown <= 0) {
-      this.emit(entity, level);
+      this.emit(entity, gameContext, level);
       this.cooldown = this.interval;
     }
   }
@@ -25,9 +30,9 @@ export class Emitter extends Trait {
     this.emitters.push(emitter);
   }
 
-  private emit(entity: Entity, level: Level) {
+  private emit(entity: Entity, gameContext: GameContext, level: Level) {
     for (const emitter of this.emitters) {
-      emitter(entity, level);
+      emitter(entity, gameContext, level);
     }
   }
 }

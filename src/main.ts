@@ -22,7 +22,7 @@ async function main(canvas: HTMLCanvasElement) {
   ]);
 
   const loadLevel = createLevelLoader(entityFactory);
-  const level = await loadLevel('debug-coin');
+  const level = await loadLevel('1-1');
 
   level.tileCollider.addCollisionHandler(new GroundCollisionHandler());
   level.tileCollider.addCollisionHandler(new BrickCollisionHandler());

@@ -1,26 +1,19 @@
-import type { AudioBoard, Entity, Level } from '@nymphajs/core';
+import type { AudioBoard, Entity, GameContext, Level } from '@nymphajs/core';
 import { Renderable } from '@nymphajs/dom-api';
-import type { EntityFactories } from '../entities';
 import { loadAudioBoard } from '../loaders/audio-loader';
 import { findPlayers } from '../player';
 import { Emitter, EMITTER_TRAIT } from '../traits/emitter';
 
 const HOLD_FIRE_THRESHOLD = 30;
 
-export async function loadCannon(
-  audioContext: AudioContext,
-  entityFactory: EntityFactories
-) {
+export async function loadCannon(audioContext: AudioContext) {
   return loadAudioBoard('cannon', audioContext).then((audioBoard) =>
-    createCannonFactory(audioBoard, entityFactory)
+    createCannonFactory(audioBoard)
   );
 }
 
-function createCannonFactory(
-  audioBoard: AudioBoard,
-  entityFactory: EntityFactories
-) {
-  function emitBullet(cannon: Entity, level: Level) {
+function createCannonFactory(audioBoard: AudioBoard) {
+  function emitBullet(cannon: Entity, gameContext: GameContext, level: Level) {
     let direction = 1;
     for (const player of findPlayers(level)) {
       if (
@@ -35,7 +28,7 @@ function createCannonFactory(
       }
     }
 
-    const bullet = entityFactory.bullet();
+    const bullet = gameContext.entityFactory.bullet();
     bullet.vel.set(80 * direction, 0);
 
     cannon.sounds.add('shoot');
